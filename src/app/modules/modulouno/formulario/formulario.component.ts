@@ -11,9 +11,9 @@ import { FormularioService } from './../servicios/formulario.service';
 export class FormularioComponent implements OnInit {
 
   completarForm: FormGroup;
-  idPersona: any;
+  idAuto: any;
   tabladatos: any[] = [];
-  displayedColumns: string[] = ['nombre', 'apellido', 'edad', 'acciones'];
+  displayedColumns: string[] = ['marca', 'modelo', 'patente', 'anio', 'acciones'];
   constructor(private fb: FormBuilder, private formularioService: FormularioService) { }
 
   ngOnInit(): void {
@@ -24,52 +24,55 @@ export class FormularioComponent implements OnInit {
 
   iniciarFormulario() {
     this.completarForm = this.fb.group({
-      nombre: [''],
-      apellido: [''],
-      edad: ['']
+      marca: [''],
+      modelo: [''],
+      patente: [''],
+      anio: ['']
     });
   }
 
   getTablaDatos() {
-    this.formularioService.getPersonas().pipe(take(1)).subscribe((personas: any) => {
-      this.tabladatos = personas;
+    this.formularioService.getAutos().pipe(take(1)).subscribe((autos: any) => {
+      this.tabladatos = autos;
     });
   }
 
-  editarPersona(persona: any) {
-    this.idPersona = persona._id;
+  editarAuto(auto: any) {
+    this.idAuto = auto._id;
     this.completarForm.patchValue({
-      nombre: persona.nombre,
-      apellido: persona.apellido,
-      edad: persona.edad
+      marca: auto.marca,
+      modelo: auto.modelo,
+      patente: auto.patente,
+      anio: auto.anio
     });
   }
 
-async borrarPersona(persona: any) {
+async borrarAuto(auto: any) {
   try {
-    this.idPersona = persona._id;
-    await this.formularioService.borrarPersona(this.idPersona).toPromise();
-    const index = this.tabladatos.findIndex((item) => item._id === this.idPersona);
+    const autoId = auto._id;
+    await this.formularioService.borrarAuto(autoId).toPromise();
+    const index = this.tabladatos.findIndex((item) => item._id === autoId);
     if (index < 0) { return; }
-    const personalist = [...this.tabladatos];
-    personalist.splice(index, 1);
-    this.tabladatos = personalist;
+    const autolist = [...this.tabladatos];
+    autolist.splice(index, 1);
+    this.tabladatos = autolist;
   } catch (error) {
     console.log(error);
   }
 }
 
 submit() {
-  if (this.idPersona) {
-    this.formularioService.editarPersona(this.idPersona, this.completarForm.value).subscribe((response) => {
-      const index = this.tabladatos.findIndex((item) => item._id === this.idPersona);
-      const personalist = [...this.tabladatos];
-      personalist[index] = { _id: response.persona._id, ...this.completarForm.value };
-      this.tabladatos = personalist;
+  if (this.idAuto) {
+    this.formularioService.editarAuto(this.idAuto, this.completarForm.value).subscribe((response) => {
+      const index = this.tabladatos.findIndex((item) => item._id === this.idAuto);
+      const autolist = [...this.tabladatos];
+      autolist[index] = { _id: response.automovil._id, ...this.completarForm.value };
+      this.tabladatos = autolist;
+      
     });
   } else {
-    this.formularioService.guardarPersona(this.completarForm.value).subscribe((persona) => {
-      this.tabladatos = [...this.tabladatos, persona];
+    this.formularioService.guardarAuto(this.completarForm.value).subscribe((auto) => {
+      this.tabladatos = [...this.tabladatos, auto];
     });
   }
 }

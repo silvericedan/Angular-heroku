@@ -1,4 +1,4 @@
-import { Persona } from './../interfaces/persona.interface';
+import { Automovil } from './../interfaces/automovil.interface';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,25 +11,25 @@ export class FormularioService {
             'Content-Type': 'application/json'
         })
     };
-    private personaUrl = 'http://localhost:3002/api/modules/personas/';
+    private autoUrl = 'http://localhost:3002/api/modules/autos/';
 
     constructor(private httpClient: HttpClient) { }
 
-    getPersonas() {
-        return this.httpClient.get(this.personaUrl + 'persona');
+    getAutos() {
+        return this.httpClient.get(this.autoUrl + 'auto');
     }
 
-    guardarPersona(persona: any) {
-        return this.httpClient.post(this.personaUrl + 'persona', JSON.stringify(persona), this.httpOptions);
+    guardarAuto(auto: any) {
+        return this.httpClient.post(this.autoUrl + 'auto', JSON.stringify(auto), this.httpOptions);
     }
 
-    editarPersona(idPersona, persona): Observable<{ [k: string]: any, persona: Persona }> {
-        return this.httpClient.put<{ [k: string]: any, persona: Persona }>(`${this.personaUrl}persona/${idPersona}`,
-            JSON.stringify(persona), this.httpOptions);
+    editarAuto(idAuto, auto): Observable<{ [k: string]: any, auto: Automovil }> {
+        return this.httpClient.put<{ [k: string]: any, auto: Automovil }>(`${this.autoUrl}auto/${idAuto}`,
+            JSON.stringify(auto), this.httpOptions);
 
     }
 
-    borrarPersona(idPersona) {
-        return this.httpClient.delete(this.personaUrl + 'persona/' + idPersona, this.httpOptions);
+    borrarAuto(idAuto) {
+        return this.httpClient.delete(this.autoUrl + 'auto/' + idAuto, this.httpOptions);
     }
 }
