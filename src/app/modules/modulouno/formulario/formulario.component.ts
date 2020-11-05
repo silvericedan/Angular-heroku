@@ -11,70 +11,68 @@ import { FormularioService } from './../servicios/formulario.service';
 export class FormularioComponent implements OnInit {
 
   completarForm: FormGroup;
-  idAuto: any;
+  idPedido: any;
   tabladatos: any[] = [];
-  displayedColumns: string[] = ['marca', 'modelo', 'patente', 'anio', 'acciones'];
+  displayedColumns: string[] = ['nombre', 'direccion', 'pedido', 'fecha', 'acciones'];
   constructor(private fb: FormBuilder, private formularioService: FormularioService) { }
 
   ngOnInit(): void {
     this.iniciarFormulario();
-
     this.getTablaDatos();
   }
 
   iniciarFormulario() {
     this.completarForm = this.fb.group({
-      marca: [''],
-      modelo: [''],
-      patente: [''],
-      anio: ['']
+      nombre: [''],
+      direccion: [''],
+      pedido: [''],
+      fecha: ['']
     });
   }
 
   getTablaDatos() {
-    this.formularioService.getAutos().pipe(take(1)).subscribe((autos: any) => {
-      this.tabladatos = autos;
+    this.formularioService.getPedidos().pipe(take(1)).subscribe((pedidos: any) => {
+      this.tabladatos = pedidos;
     });
   }
 
-  editarAuto(auto: any) {
-    this.idAuto = auto._id;
+  editarPedido(pedido: any) {
+    this.idPedido = pedido._id;
     this.completarForm.patchValue({
-      marca: auto.marca,
-      modelo: auto.modelo,
-      patente: auto.patente,
-      anio: auto.anio
+      nombre: pedido.nombre,
+      direccion: pedido.direccion,
+      pedido: pedido.pedido,
+      fecha: pedido.fecha
     });
   }
 
-async borrarAuto(auto: any) {
-  try {
-    const autoId = auto._id;
-    await this.formularioService.borrarAuto(autoId).toPromise();
-    const index = this.tabladatos.findIndex((item) => item._id === autoId);
-    if (index < 0) { return; }
-    const autolist = [...this.tabladatos];
-    autolist.splice(index, 1);
-    this.tabladatos = autolist;
-  } catch (error) {
-    console.log(error);
+  async borrarPedido(pedido: any) {
+    try {
+      const pedidoId = pedido._id;
+      await this.formularioService.borrarPedido(pedidoId).toPromise();
+      const index = this.tabladatos.findIndex((item) => item._id === pedidoId);
+      if (index < 0) { return; }
+      const pedidolist = [...this.tabladatos];
+      pedidolist.splice(index, 1);
+      this.tabladatos = pedidolist;
+    } catch (error) {
+      console.log(error);
+    }
   }
-}
 
-submit() {
-  if (this.idAuto) {
-    this.formularioService.editarAuto(this.idAuto, this.completarForm.value).subscribe((response) => {
-      const index = this.tabladatos.findIndex((item) => item._id === this.idAuto);
-      const autolist = [...this.tabladatos];
-      autolist[index] = { _id: response.automovil._id, ...this.completarForm.value };
-      this.tabladatos = autolist;
-      
-    });
-  } else {
-    this.formularioService.guardarAuto(this.completarForm.value).subscribe((auto) => {
-      this.tabladatos = [...this.tabladatos, auto];
-    });
+  submit() {
+    if (this.idPedido) {
+      this.formularioService.editarPedido(this.idPedido, this.completarForm.value).subscribe((response) => {
+        const index = this.tabladatos.findIndex((item) => item._id === this.idPedido);
+        const pedidolist = [...this.tabladatos];
+        pedidolist[index] = { _id: response.pedido._id, ...this.completarForm.value };
+        this.tabladatos = pedidolist;
+      });
+    } else {
+      this.formularioService.guardarPedido(this.completarForm.value).subscribe((pedido) => {
+        this.tabladatos = [...this.tabladatos, pedido];
+      });
+    }
   }
-}
 
 }

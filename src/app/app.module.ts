@@ -19,6 +19,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { FormularioService } from './modules/modulouno/servicios/formulario.service';
 
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule, MAT_DATE_LOCALE } from '@angular/material/core';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,9 +41,11 @@ import { FormularioService } from './modules/modulouno/servicios/formulario.serv
     MatSelectModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
-  providers: [FormularioService],
+  providers: [FormularioService, { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
