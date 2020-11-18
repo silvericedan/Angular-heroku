@@ -11,7 +11,7 @@ export class FormularioService {
             'Content-Type': 'application/json'
         })
     };
-    private pedidoUrl = 'http://localhost:3002/api/modules/pedidos/';
+    private pedidoUrl = 'https://rei1234.herokuapp.com/api/modules/pedidos/';
 
     constructor(private httpClient: HttpClient) { }
 
